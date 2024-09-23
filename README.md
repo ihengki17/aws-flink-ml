@@ -655,11 +655,11 @@ confluent flink connection create my-connection-sg --cloud aws --region ap-south
 ```
 
 <div align="center">
-    <img src="images/bedrock-1.png" width=30% height=30%>
+    <img src="images/bedrock-1.png" width=100% height=100%>
 </div>
 
 <div align="center">
-    <img src="images/bedrock-2.png" width=30% height=30%>
+    <img src="images/bedrock-2.png" width=100% height=100%>
 </div>
 
 3. After creating connection, we need to create the model in Flink before we could invoke on our query.
@@ -677,7 +677,7 @@ WITH (
 ```
 
 <div align="center">
-    <img src="images/bedrock-3.png" width=30% height=30%>
+    <img src="images/bedrock-3.png" width=100% height=100%>
 </div>
 
 4. Now let's invoke the model and get the results.
@@ -686,7 +686,7 @@ WITH (
 SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('shoe_loyalty_meail', loyalty_level));
 ```
 <div align="center">
-    <img src="images/bedrock-4.png" width=30% height=30%>
+    <img src="images/bedrock-4.png" width=100% height=100%>
 </div>
 
 ***
