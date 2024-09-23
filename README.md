@@ -664,7 +664,7 @@ confluent flink connection create my-connection-sg --cloud aws --region ap-south
 
 3. After creating connection, we need to create the model in Flink before we could invoke on our query.
 ```sql
-CREATE MODEL shoe_loyalty_email
+CREATE MODEL PromotionEngineSG
 INPUT (loyal_level STRING)
 OUTPUT (promotion STRING)
 WITH (
@@ -683,7 +683,7 @@ WITH (
 4. Now let's invoke the model and get the results.
 
 ```sql
-SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('shoe_loyalty_meail', loyalty_level));
+SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('PromotionEngineSG', loyalty_level));
 ```
 <div align="center">
     <img src="images/bedrock-4.png" width=100% height=100%>
