@@ -827,7 +827,9 @@ FROM shoe_orders_enriched_customer_product
 WHERE brand = 'Jones-Stokes'
 GROUP BY email
 HAVING COUNT(*) % 10 = 0;
+```
 
+```sql
 INSERT INTO shoe_promotions
 SELECT
    email,
