@@ -1,9 +1,9 @@
-<div align="center">
+<div align="center" padding=25px>
     <img src="images/confluent.png" width=50% height=50%>
 </div>
 
 # <div align="center">Confluent x AWS Data Streaming LIVE Lab</div>
-
+## <div align="center">Lab Guide</div>
 <br>
 
 ## **Agenda**
@@ -12,27 +12,23 @@
 3. [Create Flink Compute Pool](#step-3)
 4. [Create Topics and walk through Confluent Cloud Dashboard](#step-4)
 5. [Create an API Key Pair](#step-5)
-6. [Create Datagen Connectors for Users and Stocks](#step-6)
-7. [Flink Queries](#step-7)
+6. [Create Datagen Connectors for Customers, Products and Orders](#step-6)
+7. [Flink Basics](#step-7)
 8. [Flink Aggregations](#step-8)
 9. [Flink Windowing Functions](#step-9)
-10. [Fraud Detection](#step-10)
-11. [Check Flink Queries](#step-11)
-12. [Connect Flink with Bedrock Model](#step-12)
-13. [Clean Up Resources](#step-13)
-14. [Confluent Resources and Further Testing](#step-14)
-
-***
-
-## **Architecture**
-
-<div align="center" padding=25px>
-    <img src="images/GCP-builder-arch.png" width=75% height=75%>
-</div>
+10. [Flink Tables - Primary Key](#step-10)
+11. [Flink Joins](#step-11)
+12. [Customer Loyalty Level Calculation](#step-12)
+13. [Create Promotional Campaigns](#step-13)
+14. [Connect Flink with Bedrock Model](#step-14)
+15. [Flink Monitoring](#step-15)
+16. [Clean Up Resources](#step-16)
+17. [Confluent Resources and Further Testing](#step-17)
 
 ***
 
 ## **Prerequisites**
+<br>
 
 1. Create a Confluent Cloud Account.
     - Sign up for a Confluent Cloud account [here](https://www.confluent.io/confluent-cloud/tryfree/).
@@ -48,13 +44,11 @@
 
 ## **Objective**
 
-In this hands-on lab, participants will learn and explore how to leverage Confluent Cloud, powered by Kora Engine, to build a real-time streaming analytics use case and activate the power of data with Amazon Web Services such as Redshift, Bedrock, Looker Studio etc.
+<br>
 
-During the session, we will explore:
-- The common challenges of Apache Kafka Deployments
-- How you can easily activate Confluent Cloud on AWS Cloud Marketplace
-- How to connect Amazon Web Services with Confluent Cloud
-- The benefits of Confluent Cloud for production workloads on AWS
+Welcome to “Enable Real-Time Data Transformations and Stream Processing with Apache Flink on Confluent Cloud”! In this workshop, you will learn how to build stream processing applications using Apache Flink on Confluent Cloud as well as learn about the use cases Apache Flink unlocks: streaming ETL, data discovery and enrichment, anomaly detection, and more.
+
+In this workshop, you will have learned how to leverage Apache Flink to perform continuous transformations, create materialized views, and serve lookups against these materialized views all with the data you already have in Confluent Cloud.
 
 ***
 
@@ -89,7 +83,7 @@ An environment contains clusters and its deployed components such as Apache Flin
     <img src="images/stream-governance-1.png" width=50% height=50%>
 </div>
 
-3. Select **GCP Sydney Region** for Stream Governance Essentials, click **Continue**.
+3. Select **AWS Sydney Region** for Stream Governance Essentials, click **Continue**.
 
 <div align="center" padding=25px>
     <img src="images/stream-governance-2.png" width=50% height=50%>
@@ -106,12 +100,7 @@ An environment contains clusters and its deployed components such as Apache Flin
 </div>
 
 6. Click **Begin Configuration**. 
-7. Choose GCP as Cloud Provider and your preferred, region (Singapore/ asia-southeast1) , and Uptime SLA is default. 
-
-<div align="center" padding=25px>
-    <img src="images/cluster-region.png" width=50% height=50%>
-</div>
-
+7. Choose your preferred Cloud Provider (AWS, GCP, or Azure), region, and availability zone. 
 8. Specify a **Cluster Name**. For the purpose of this lab, any name will work here. 
 
 <div align="center" padding=25px>
@@ -136,7 +125,7 @@ An environment contains clusters and its deployed components such as Apache Flin
     <img src="images/create-flink-pool-2.png" width=50% height=50%>
 </div>
 
-3. Name you **Pool Name**. Click **Create**.
+3. Name you Pool Name and set the capacity units (CFUs) to **5**. Click **Finish**.
 
 <div align="center" padding=25px>
     <img src="images/create-flink-pool-3.png" width=50% height=50%>
@@ -165,10 +154,8 @@ An environment contains clusters and its deployed components such as Apache Flin
 7. Set the default Database as your cluster name.
 
 <div align="center" padding=25px>
-    <img src="images/flink-workspace-2.png" width=50% height=50%>
+    <img src="images/flink-workspace-3.png" width=50% height=50%>
 </div>
-
-***
 
 ***
 
@@ -184,25 +171,26 @@ An environment contains clusters and its deployed components such as Apache Flin
 
 2. Click on **Cluster Settings**. This is where you can find your *Cluster ID, Bootstrap Server, Cloud Details, Cluster Type,* and *Capacity Limits*.
 3. On the same navigation menu, select **Topics** and click **Create Topic**. 
-4. Enter **users_topic** as the topic name, **1** as the number of partitions, and then click **Create with defaults**. 
+4. Enter **shoe_products** as the topic name, **3** as the number of partitions, and then click **Create with defaults**. 
 
 <div align="center" padding=25px>
     <img src="images/create-topic.png" width=50% height=50%>
 </div>
 
-5. Repeat the previous step and create a second topic name **stocks_topic** and **1** as the number of partitions.
+5. Repeat the previous step and create a second topic name **shoe_customers** and **3** as the number of partitions.
+   
+6. Repeat the previous step and create a second topic name **shoe_orders** and **3** as the number of partitions.
 
 > **Note:** Topics have many configurable parameters. A complete list of those configurations for Confluent Cloud can be found [here](https://docs.confluent.io/cloud/current/using/broker-config.html). If you are interested in viewing the default configurations, you can view them in the Topic Summary on the right side. 
 
 7. After topic creation, the **Topics UI** allows you to monitor production and consumption throughput metrics and the configuration parameters for your topics. When you begin sending messages to Confluent Cloud, you will be able to view those messages and message schemas.
-8. Below is a look at the topic, **users_topic**, but you need to send data to this topic before you see any metrics.
+8. Below is a look at the topic, **shoe_orders**, but you need to send data to this topic before you see any metrics.
 
 <div align="center" padding=25px>
-    <img src="images/users-topic.png" width=75% height=75%>
+    <img src="images/shoe_orders-topic.png" width=75% height=75%>
 </div>
 
 ***
-
 
 ## <a name="step-5"></a>Create an API Key
 
@@ -219,11 +207,11 @@ An environment contains clusters and its deployed components such as Apache Flin
 
 ***
 
-## <a name="step-6"></a>Create Datagen Connectors for Users and Stocks
+## <a name="step-6"></a>Create Datagen Connectors for Customers, Products and Orders
 
-The next step is to produce sample data using the Datagen Source connector. You will create three Datagen Source connectors. One connector will send sample customer data to **users_topic** topic, the other connector will send sample product data to **stocks_topic** topic.
+The next step is to produce sample data using the Datagen Source connector. You will create three Datagen Source connectors. One connector will send sample customer data to **shoe_customers** topic, the other connector will send sample product data to **shoe_products** topic, and final connector will send sample order data to **shoe_orders** topic.
 
-1. First, you will create the connector that will send data to **users_topic**. From the Confluent Cloud UI, click on the **Connectors** tab on the navigation menu. Click on the **Datagen Source** icon.
+1. First, you will create the connector that will send data to **shoe_customers**. From the Confluent Cloud UI, click on the **Connectors** tab on the navigation menu. Click on the **Datagen Source** icon.
 
 <div align="center" padding=25px>
     <img src="images/connectors.png" width=75% height=75%>
@@ -235,12 +223,12 @@ The next step is to produce sample data using the Datagen Source connector. You 
 
 | setting                            | value                        |
 |------------------------------------|------------------------------|
-| name                               | DatagenSourceConnector_users |
+| name                               | DatagenSourceConnector_shoe_customers |
 | api key                            | [*from step 5* ](#step-5)    |
 | api secret                         | [*from step 5* ](#step-5)    |
-| topic                              | users_topic                  |
+| topic                              | shoe_customers               |
 | output message format              | AVRO                         |
-| quickstart                         | Users                        |
+| quickstart                         | Shoe customers               |
 | max interval between messages (ms) | 1000                         |
 | tasks                              | 1                            |
 </div>
@@ -264,7 +252,7 @@ The next step is to produce sample data using the Datagen Source connector. You 
     <img src="images/datagen-4.png" width=50% height=50%>
 </div>
 
-5. Next, create the second connector that will send data to **stocks_topic**. Click on **+ Add Connector** and then the **datagen Source** icon again. 
+5. Next, create the second connector that will send data to **shoe_products**. Click on **+ Add Connector** and then the **datagen Source** icon again. 
 
 6. Enter the following configuration details. The remaining fields can be left blank. 
 
@@ -272,12 +260,12 @@ The next step is to produce sample data using the Datagen Source connector. You 
 
 | setting                            | value                        |
 |------------------------------------|------------------------------|
-| name                               | DatagenSourceConnector_stocks|
+| name                               | DatagenSourceConnector_shoe_products |
 | api key                            | [*from step 5* ](#step-5)    |
 | api secret                         | [*from step 5* ](#step-5)    |
-| topic                              | stocks_topic                 |
+| topic                              | shoe_products                |
 | output message format              | AVRO                         |
-| quickstart                         | Stocks trade                 |
+| quickstart                         | Shoes                        |
 | max interval between messages (ms) | 1000                         |
 | tasks                              | 1                            |
 </div>
@@ -285,6 +273,28 @@ The next step is to produce sample data using the Datagen Source connector. You 
 <br> 
 
 7. Review the output again and then select **Launch**.
+
+8. Next, create the second connector that will send data to **shoe_orders**. Click on **+ Add Connector** and then the **datagen Source** icon again. 
+
+9. Enter the following configuration details. The remaining fields can be left blank. 
+
+<div align="center">
+
+| setting                            | value                        |
+|------------------------------------|------------------------------|
+| name                               | DatagenSourceConnector_shoe_orders |
+| api key                            | [*from step 5* ](#step-5)    |
+| api secret                         | [*from step 5* ](#step-5)    |
+| topic                              | shoe_orders                  |
+| output message format              | AVRO                         |
+| quickstart                         | Shoe orders                  |
+| max interval between messages (ms) | 1000                         |
+| tasks                              | 1                            |
+</div>
+
+<br> 
+
+10. Review the output again and then select **Launch**.
 
 > **Note:** It may take a few moments for the connectors to launch. Check the status and when both are ready, the status should show *running*. <br> <div align="center"><img src="images/running-connectors.png" width=75% height=75%></div>
 
@@ -294,14 +304,14 @@ The next step is to produce sample data using the Datagen Source connector. You 
 > * If neither of these steps work, try creating another Datagen connector.
 
 
-8. You can view the sample data flowing into topics in real time. Navigate to  the **Topics** tab and then click on the **users_topic**. You can view the production and consumption throughput metrics here.
+11. You can view the sample data flowing into topics in real time. Navigate to  the **Topics** tab and then click on the **shoe_customers**. You can view the production and consumption throughput metrics here.
 
-9. Click on **Messages**.
+12. Click on **Messages**.
 
 * You should now be able to see the messages within the UI. You can view the specific messages by clicking the icon. 
 
 <div align="center">
-    <img src="images/message-view-1.png" width=75% height=75%>
+    <img src="images/message-view-1.png">
 </div> 
 
 * The message details should look something like the following. 
@@ -312,7 +322,7 @@ The next step is to produce sample data using the Datagen Source connector. You 
 
 ***
 
-## <a name="step-7"></a>Flink Queries
+## <a name="step-7"></a>Flink Basics
 Kafka topics and schemas are always in sync with our Flink cluster. Any topic created in Kafka is visible directly as a table in Flink, and any table created in Flink is visible as a topic in Kafka. Effectively, Flink provides a SQL interface on top of Confluent Cloud.
 
 Following mappings exist:
@@ -338,188 +348,92 @@ SHOW TABLES;
     <img src="images/show-tables.png" width=75% height=75%>
 </div>
 
-Understand how the table `stocks_topic` was created:
+Understand how the table `shoe_products` was created:
 
 ```sql
-SHOW CREATE TABLE stocks_topic;
+SHOW CREATE TABLE shoe_products;
 ```
+
+<div align="center">
+    <img src="images/show-table-shoe_products.png" width=75% height=75%>
+</div>
 
 You can find more information about all DDL Statements [here.](https://docs.confluent.io/cloud/current/flink/reference/statements/overview.html)
 
-Let us first check the table schema for our `stocks_topic` catalog. This should be the same as the topic schema in Schema Registry.
+Let us first check the table schema for our `shoe_products` catalog. This should be the same as the topic schema in Schema Registry.
 ```sql
-DESCRIBE stocks_topic;
+DESCRIBE shoe_products;
 ```
 
 2. Let's check if any product records exist in the table.
 ```sql
-SELECT * FROM stocks_topic;
+SELECT * FROM shoe_products;
 ```
 
-3. Check if the `users_topic` schema  exists. 
+3. Check if the `shoe_customers` schema  exists. 
 ```sql
-DESCRIBE users_topic;
+DESCRIBE shoe_customers;
 ```
 
 4. Check the customers in Texas whose name start with `B`.
 ```sql
-SELECT * FROM users_topic
-  WHERE `userid` = 'User_8' AND `gender` LIKE 'MA%';
+SELECT * FROM shoe_customers
+  WHERE `state` = 'Texas' AND `last_name` LIKE 'B%';
 ```
 
-5. Check the first five stocks trades for one customer.
+5. Check the first ten orders for one customer.
 ```sql
-SELECT side,
-       quantity,
-       symbol,
+SELECT order_id,
+       product_id,
+       customer_id,
        $rowtime AS ingestion_time
-  FROM stocks_topic
-  WHERE userid = 'User_8'
-  LIMIT 5;
+  FROM shoe_orders
+  WHERE customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a'
+  LIMIT 10;
 ```
 
-
-6. Find the message timestamps for all stocks trades of one user.
+6. Find the message timestamps for all orders of one customer.
 ```sql
-SELECT side,
-       quantity,
-       symbol,
+SELECT order_id,
+       customer_id,
        $rowtime AS ingestion_time
-  FROM stocks_topic
-  WHERE userid = 'User_8';
+FROM shoe_orders
+WHERE customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
 ```
 
-
-7. Enrich Stocks Trades information with Users Topic. Create a new table for enriched order information..
-```sql
-CREATE TABLE stocks_trades_enriched_user_detail(
-  userid STRING,
-  regionid STRING, 
-  gender STRING, 
-  side STRING, 
-  quantity INT, 
-  symbol STRING, 
-  price INT, 
-  account STRING
-) WITH (
-    'kafka.partitions' = '3',
-    'changelog.mode' = 'retract'
-);
-```
-
-8. Insert joined data from 2 tables into the new table. Keep this query running.
-```sql
-INSERT INTO stocks_trades_enriched_user_detail
-     SELECT ut.userid AS userid, 
-           regionid, 
-           gender, 
-           side, 
-           quantity, 
-           symbol, 
-           price, 
-           account
-    FROM stocks_topic st
-    LEFT JOIN users_topic ut
-    ON st.userid = ut.userid;
-```
-9. Add Flink Statement windows by click (+). Check the enriched table by running this query.
-```sql
-select * from stocks_trades_enriched_user_detail;
-```
 <div align="center">
-    <img src="images/stocks-enriched-query.png" width=75% height=75%>
-</div> 
-
+    <img src="images/flink-basics-ingestion-time.png" width=75% height=75%>
+</div>
 
 ***
 
 ## <a name="step-8"></a>Flink Aggregations
-1. Find the number of users records.
+1. Find the number of customers records.
 ```sql
-SELECT COUNT(userid) AS num_records
-FROM users_topic;
+SELECT COUNT(id) AS num_records
+FROM shoe_customers;
 ```
 
-2. Find the number of unique users records.
+2. Find the number of unique customers records.
 ```sql
-SELECT COUNT(DISTINCT userid) AS num_customers
-FROM users_topic;
+SELECT COUNT(DISTINCT id) AS num_customers
+FROM shoe_customers;
 ```
 
-3. For each userid, find the number of stock symbol, average quantity and maximum model price. 
+3. For each shoe brand, find the number of shoe models, average rating and maximum model price. 
 ```sql
-SELECT userid as user_id, 
-       COUNT(DISTINCT symbol) as stock_by_symbol,
-       ROUND(AVG(quantity),2) as avg_quantity,
-       MAX(price) as max_price
-FROM stocks_topic
-GROUP BY userid;
-```
-4. Running query to aggregate the data by counting buys of stocks. 
-```sql
-SELECT symbol,
-       COUNT(quantity) AS total_times_bought
-FROM stocks_topic
-WHERE side = 'BUY'
-GROUP BY symbol
+SELECT brand as brand_name, 
+       COUNT(DISTINCT name) as models_by_brand,
+       ROUND(AVG(rating),2) as avg_rating,
+       MAX(sale_price) as max_price
+FROM shoe_products
+GROUP BY brand;
 ```
 
-5. Create new table number_of_times_stock_bought to store the result. 
-```sql
-CREATE TABLE number_of_times_stock_bought(
-  symbol STRING,
-  total_times_bought BIGINT,
-  PRIMARY KEY (symbol) NOT ENFORCED
-)WITH (
-     'kafka.partitions' = '3'
-);
-```
+<div align="center">
+    <img src="images/flink-data-aggregation.gif" width=75% height=75%>
+</div>
 
-6. Insert all the aggregate the data by counting buys of stocks to the number_of_times_stock_bought table. 
-```sql
-INSERT INTO number_of_times_stock_bought
-SELECT symbol,
-       COUNT(quantity) AS total_times_bought
-FROM stocks_topic
-WHERE side = 'BUY'
-GROUP BY symbol
-```
-7. Add Flink Statement windows by click (+). Running query to the number_of_times_stock_bought table. 
-```sql
-select * from number_of_times_stock_bought;
-```
-8. Next, create a table that calculates the total number of stocks purchased per symbol.  
-```sql
-SELECT symbol,
-           SUM(quantity) AS total_quantity
-FROM stocks_topic
-WHERE side = 'BUY'
-GROUP BY symbol
-```
-9. Create new table total_stock_purchased to store the result. 
-```sql
-CREATE TABLE total_stock_purchased(
-  symbol STRING,
-  total_quantity BIGINT,
-  PRIMARY KEY (symbol) NOT ENFORCED
-)WITH (
-     'kafka.partitions' = '3'
-);
-```
-
-10. Insert all the aggregate the data by counting buys of stocks to the number_of_times_stock_bought table. 
-```sql
-INSERT INTO total_stock_purchased
-SELECT symbol,
-       SUM(quantity) AS total_quantity 
-FROM stocks_topic
-WHERE side = 'BUY'
-GROUP BY symbol
-```
-11. Add Flink Statement windows by click (+). Check the result by running query to the total_stock_purchased table. 
-```sql
-select * from total_stock_purchased;
-```
 > **Note:** Check this [link](https://docs.confluent.io/cloud/current/flink/reference/functions/aggregate-functions.html) for more information about Flink aggregation functions.
 
 ***
@@ -536,22 +450,26 @@ b. [Hop Windows](https://docs.confluent.io/cloud/current/flink/reference/queries
 c. [Cumulate Windows](https://docs.confluent.io/cloud/current/flink/reference/queries/window-tvf.html#flink-sql-window-tvfs-cumulate)
 <br> 
 
-1. Find the amount of stocks trades for five minute intervals (tumbling window aggregation).
+1. Find the amount of orders for one minute intervals (tumbling window aggregation).
 ```sql
 SELECT window_end,
-       COUNT(side) AS num_orders
+       COUNT(DISTINCT order_id) AS num_orders
 FROM TABLE(
-  TUMBLE(TABLE stocks_topic, DESCRIPTOR(`$rowtime`), INTERVAL '5' MINUTES))
+  TUMBLE(TABLE shoe_orders, DESCRIPTOR(`$rowtime`), INTERVAL '1' MINUTES))
 GROUP BY window_end;
 ```
 
-2. Find the amount of stocks trades for ten minute intervals advanced by five minutes (hopping window aggregation).
+<div align="center">
+    <img src="images/flink-window-function.gif" width=75% height=75%>
+</div>
+
+2. Find the amount of orders for ten minute intervals advanced by five minutes (hopping window aggregation).
 ```sql
 SELECT window_start,
        window_end,
-       COUNT(side) AS num_orders
+       COUNT(DISTINCT order_id) AS num_orders
 FROM TABLE(
-  HOP(TABLE stocks_topic, DESCRIPTOR(`$rowtime`), INTERVAL '5' MINUTES, INTERVAL '10' MINUTES))
+  HOP(TABLE shoe_orders, DESCRIPTOR(`$rowtime`), INTERVAL '5' MINUTES, INTERVAL '10' MINUTES))
 GROUP BY window_start, window_end;
 ```
 
@@ -559,94 +477,386 @@ GROUP BY window_start, window_end;
 
 ***
 
-## <a name="step-10"></a>Fraud Detection
+## <a name="step-10"></a>Flink Tables - Primary Key
+A primary key constraint is a hint for Flink SQL to leverage for optimizations which specifies that a column or a set of columns in a table or a view are unique and they do not contain null. No columns in a primary key can be nullable. A primary key uniquely identifies a row in a table.
+For more details please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/statements/create-table.html#primary-key-constraint)
 
-After we walked through a few examples on how to use Flink for Windowing, Tumble Windows and Hop Windows, We will use it including how to use it for anomaly or fraud detection. Flink enables aggregation operations on tables, as you saw in the previous step, and you have the ability to set time boundaries named windows. A window has a start time and an end time, which you access in your queries by using WINDOWSTART and WINDOWEND. When using Windowing, aggregate functions are applied only to the records that occur within the specified time window. 
-
-1. Create table stocks_purchased_today
+1. Create a new table that will store unique customers only.
 ```sql
-CREATE TABLE stocks_purchased_today(
-  symbol STRING,
-  window_start TIMESTAMP,
-  window_end TIMESTAMP,
-  quantity BIGINT,
-  PRIMARY KEY (symbol, window_start,window_end) NOT ENFORCED
-)WITH (
-     'kafka.partitions' = '3'
+CREATE TABLE shoe_customers_keyed (
+  customer_id STRING,
+  first_name STRING,
+  last_name STRING,
+  email STRING,
+  PRIMARY KEY (customer_id) NOT ENFORCED
+) DISTRIBUTED BY (customer_id) INTO 3 BUCKETS;
+```
+
+2. Compare the new table `shoe_customers_keyed` with `shoe_customers`.
+```sql
+SHOW CREATE TABLE shoe_customers;
+```
+```sql
+SHOW CREATE TABLE shoe_customers_keyed;
+```
+
+<div align="center">
+    <img src="images/flink-tables-primary-key.png" width=75% height=75%>
+</div>
+
+By creating a table with Primary Key option, you changed the changelog-mode to upsert which means that all rows with same primary key are related and must be partitioned together.
+For more details please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/statements/create-table.html#changelog-mode)
+
+3. Create a new Flink job to copy customer data from the original table to the new table.
+```sql
+INSERT INTO shoe_customers_keyed
+  SELECT id,
+         first_name,
+         last_name,
+         email
+    FROM shoe_customers;
+```
+
+4. Show the number of customers in `shoe_customers_keyed`.
+```sql
+SELECT COUNT(*) as number_of_customers
+FROM shoe_customers_keyed;
+```
+
+5. Look up one specific customer in the keyed Table (shoe_customers_keyed).
+```sql
+SELECT * 
+FROM shoe_customers_keyed  
+WHERE customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
+```
+
+6. Look up the specific customer change history in non-keyed Table (shoe_customers).
+```sql
+SELECT *
+FROM shoe_customers
+WHERE id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
+```
+
+7. Product Catalog Table also requires unique rows for each item.
+Create a new table in order to have the latest information of each product. 
+It is useful when you need to know the latest price of the product for analytic purposes or you need to populate latest product information while joining with other tables.
+```sql
+CREATE TABLE shoe_products_keyed(
+  product_id STRING,
+  brand STRING,
+  `model` STRING,
+  sale_price INT,
+  rating DOUBLE,
+  PRIMARY KEY (product_id) NOT ENFORCED
+) DISTRIBUTED BY (product_id) INTO 3 BUCKETS;
+```
+
+8. Create a new Flink job to copy product data from the original table to the new table. 
+```sql
+INSERT INTO shoe_products_keyed
+  SELECT id,
+         brand,
+         `name`,
+         sale_price,
+         rating 
+    FROM shoe_products;
+```
+
+9. Check if only a single record is returned for some product.
+```sql
+SELECT * 
+FROM shoe_products_keyed  
+WHERE product_id = '0fd15be0-8b95-4f19-b90b-53aabf4c49df';
+```
+
+***
+
+## <a name="step-11"></a>Flink Joins
+Flink supports complex and flexible join operations over dynamic tables. There are a number of different types of joins to account for the wide variety of semantics that queries may require.
+
+By default, the order of joins is not optimized. Tables are joined in the order in which they are specified in the FROM clause.
+
+You can tweak the performance of your join queries, by listing the tables with the lowest update frequency first and the tables with the highest update frequency last. Make sure to specify tables in an order that doesn’t yield a cross join (Cartesian product), which aren’t supported and would cause a query to fail.
+For more details please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/queries/joins.html)
+
+1. Join orders with non-keyed customer records (Regular Join).
+```sql
+SELECT order_id,
+       shoe_orders.`$rowtime` as ingestion_time,
+       first_name,
+       last_name
+FROM shoe_orders
+INNER JOIN shoe_customers 
+ON shoe_orders.customer_id = shoe_customers.id
+WHERE customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
+```
+
+<div align="center">
+    <img src="images/flink-regular-join-duplicated.png" width=75% height=75%>
+</div>
+
+> **Note:** As expected the result has duplicated entries because of the non-keyed records.
+
+2. Join orders with non-keyed customer records in some time windows (Interval Join).
+   Find orders of a specific customer in 1 hour interval after the last update of customer information. 
+```sql
+SELECT order_id,
+       shoe_orders.`$rowtime` as order_time,
+       shoe_customers.`$rowtime` as customer_info_update_time,
+       first_name,
+       last_name
+FROM shoe_orders
+INNER JOIN shoe_customers
+ON shoe_orders.customer_id = shoe_customers.id
+WHERE customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a'
+      AND
+      shoe_orders.`$rowtime`
+        BETWEEN
+         shoe_customers.`$rowtime`
+         AND
+         shoe_customers.`$rowtime` + INTERVAL '1' HOUR;
+```
+
+<div align="center">
+    <img src="images/flink-joins-customer-activity-order-time.png" width=75% height=75%>
+</div>
+
+3. Join orders with keyed customer records (Regular Join with Keyed Table).
+```sql
+SELECT order_id,
+       shoe_orders.`$rowtime` as ingestion_time,
+       first_name,
+       last_name
+FROM shoe_orders
+INNER JOIN shoe_customers_keyed 
+ON shoe_orders.customer_id = shoe_customers_keyed.customer_id
+WHERE shoe_customers_keyed.customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
+```
+
+<div align="center">
+    <img src="images/flink-regular-join-keyed-table-unique.png" width=75% height=75%>
+</div>
+
+> **Note:** As expected the number of rows is lesser than the non-keyed table join. The duplicate entries are eliminated.
+
+4. Join orders with keyed customer records at the time when order was created  (Temporal Join with Keyed Table).
+   Find orders of a specific customer with the latest customer information at the point of order creation.
+```sql
+SELECT order_id,
+       shoe_orders.`$rowtime` as order_time,
+       shoe_customers_keyed.`$rowtime` as customer_info_update_time,
+       first_name,
+       last_name
+FROM shoe_orders
+INNER JOIN shoe_customers_keyed FOR SYSTEM_TIME AS OF shoe_orders.`$rowtime`
+ON shoe_orders.customer_id = shoe_customers_keyed.customer_id
+WHERE shoe_customers_keyed.customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
+```
+
+<div align="center">
+    <img src="images/flink-joins-latest-customer-info-order-time.png" width=75% height=75%>
+</div>
+
+> **Note:** There might be empty result set if keyed customers tables was created after the order records were ingested in the shoe_orders topic.
+
+> **Note:** For more details of temporal joins please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/queries/joins.html#temporal-joins)
+
+5. Enrich Order information with Customer and Product Table.
+   Create a new table for enriched order information.
+```sql
+CREATE TABLE shoe_orders_enriched_customer_product(
+  order_id INT,
+  first_name STRING,
+  last_name STRING,
+  email STRING,
+  brand STRING,
+  `model` STRING,
+  sale_price INT,
+  rating DOUBLE
+) DISTRIBUTED BY (order_id) INTO 3 BUCKETS
+WITH (
+    'changelog.mode' = 'retract'
 );
 ```
 
-2. Insert data into the new table created above.
+Insert joined data from 3 tables into the new table.
 ```sql
-insert into stocks_purchased_today
-SELECT symbol,window_start,
-  window_end,     
-  COUNT(*) AS quantity
-FROM TABLE(
-  TUMBLE(TABLE stocks_topic, DESCRIPTOR(`$rowtime`), INTERVAL '5' MINUTES))
-GROUP BY symbol,window_end,window_start;
+INSERT INTO shoe_orders_enriched_customer_product(
+  order_id,
+  first_name,
+  last_name,
+  email,
+  brand,
+  `model`,
+  sale_price,
+  rating)
+SELECT
+  so.order_id,
+  sc.first_name,
+  sc.last_name,
+  sc.email,
+  sp.brand,
+  sp.`model`,
+  sp.sale_price,
+  sp.rating
+FROM 
+  shoe_orders so
+  INNER JOIN shoe_customers_keyed sc 
+    ON so.customer_id = sc.customer_id
+  INNER JOIN shoe_products_keyed sp
+    ON so.product_id = sp.product_id;
 ```
 
-3. Add Flink Statement windows by click (+). Once you have created the windowed table, and you have inserted the data , use the Flink Workspace to query the table. If you construct the statement on your own, make sure it looks like the following..
+Verify that the data was joined successfully.
 ```sql
-select * from stocks_purchased_today
+SELECT * FROM shoe_orders_enriched_customer_product;
 ```
 
-4. Going along with the theme of fraud detection, create a table named accounts_to_monitor with accounts to monitor based on their activity during a given time frame. In the Flink Workspace , paste the following statement and run the query. Change XXX with your random number.
-```sql
-CREATE TABLE accounts_to_monitor_XXX(
-  window_start TIMESTAMP,
-  window_end TIMESTAMP,
-  account STRING,
-  quantity BIGINT,
-  PRIMARY KEY (window_start,window_end,account) NOT ENFORCED
-)WITH (
-     'kafka.partitions' = '3'
-);
-```
-5. Insert data into the new table created above.
-```sql
-INSERT INTO accounts_to_monitor_XXX
-SELECT window_start,
-  window_end,
-  account,     
-  COUNT(*) AS quantity
-FROM TABLE(
-  TUMBLE(TABLE stocks_topic, DESCRIPTOR(`$rowtime`), INTERVAL '5' MINUTES))
-GROUP BY window_end,window_start,account
-HAVING COUNT(*)>10;
-```
-6. Add Flink Statement windows by click (+). Verify the result.
-  ```sql
-Select * from  accounts_to_monitor_XXX;
-``` 
-***
-
-## <a name="step-11"></a>Check Flink Queries
-
-Building on our Fraud Detection example from the last step, let’s say our fraud service wants to check on high frequency accounts. Then we can monitor the activity for a suspicious account. 
+<div align="center">
+    <img src="images/flink-join-orders-enrichment.gif" width=75% height=75%>
+</div>
 
 
-1. In the Flink Statement Editor. We run this query in the Editor to see how our accounts are behaving.  
-
-```sql
-SELECT * FROM accounts_to_monitor_XXX
-     WHERE quantity > 100;
-```
-2. Once we have identified a potential troublemaker, we can create an ephemeral push query to monitor future trades from our **STOCKS_ENRICHED** stream. This will continue to push trades to the fraud service for further analysis until it is stopped. 
-
-```sql
-SELECT * FROM stocks_trades_enriched_user_detail 
-	WHERE account = 'ABC123';
-```
 
 ***
 
-## <a name="step-12"></a>Connect Flink with Bedrock Model
+## <a name="step-12"></a>Customer Loyalty Level Calculation
+1. Calculate loyalty levels of each customer
+```sql
+SELECT
+  email,
+  SUM(sale_price) AS total,
+  CASE
+    WHEN SUM(sale_price) > 700000 THEN 'GOLD'
+    WHEN SUM(sale_price) > 70000 THEN 'SILVER'
+    WHEN SUM(sale_price) > 7000 THEN 'BRONZE'
+    ELSE 'CLIMBING'
+  END AS loyalty_level
+FROM shoe_orders_enriched_customer_product
+GROUP BY email;
+```
 
+<div align="center">
+    <img src="images/flink-loyalty-level-calculation.gif" width=75% height=75%>
+</div>
+
+
+2. Create a new table that will store the loyalty levels if the customers.
+```sql
+CREATE TABLE shoe_loyalty_levels(
+  email STRING,
+  total BIGINT,
+  loyalty_level STRING,
+  PRIMARY KEY (email) NOT ENFORCED
+) DISTRIBUTED BY (email) INTO 3 BUCKETS ;
+```
+
+3. Insert the calculated loyal levels into the new table.
+```sql
+INSERT INTO shoe_loyalty_levels(
+ email,
+ total,
+ loyalty_level)
+SELECT
+  email,
+  SUM(sale_price) AS total,
+  CASE
+    WHEN SUM(sale_price) > 700000 THEN 'GOLD'
+    WHEN SUM(sale_price) > 70000 THEN 'SILVER'
+    WHEN SUM(sale_price) > 7000 THEN 'BRONZE'
+    ELSE 'CLIMBING'
+  END AS loyalty_level
+FROM shoe_orders_enriched_customer_product
+GROUP BY email;
+```
+
+4. Verify the results.
+```sql
+SELECT *
+FROM shoe_loyalty_levels;
+```
+
+<div align="center">
+    <img src="images/flink-loyalty-level-table.gif" width=75% height=75%>
+</div>
+
+***
+
+## <a name="step-13"></a>Create Promotional Campaigns
+Create special promotions based on the enriched orders table.
+1. Find eligible customers who order **'Jones-Stokes'** shoes **10th time**.
+```sql
+SELECT
+   email,
+   COUNT(*) AS total,
+   (COUNT(*) % 10) AS sequence,
+   (COUNT(*) % 10) = 0 AS next_one_free
+FROM shoe_orders_enriched_customer_product
+WHERE brand = 'Jones-Stokes'
+GROUP BY email;
+```
+
+2. Find eligible customers who ordered **'Braun-Bruen'** and **'Will Inc'** in total more than **10**.
+```sql
+SELECT
+   email,
+   COLLECT(brand) AS products,
+   'bundle_offer' AS promotion_name
+FROM shoe_orders_enriched_customer_product
+WHERE brand IN ('Braun-Bruen', 'Will Inc')
+GROUP BY email
+HAVING COUNT(DISTINCT brand) = 2 AND COUNT(brand) > 10;
+```
+
+3. Create a table for promotion notifications.
+```sql
+CREATE TABLE shoe_promotions(
+  email STRING,
+  promotion_name STRING,
+  PRIMARY KEY (email) NOT ENFORCED
+) DISTRIBUTED BY (email) INTO 3 BUCKETS;
+```
+
+4. Insert all the promotional information to the shoe_promotions table.  
+```sql
+INSERT INTO shoe_promotions
+SELECT
+   email,
+   'next_free' AS promotion_name
+FROM shoe_orders_enriched_customer_product
+WHERE brand = 'Jones-Stokes'
+GROUP BY email
+HAVING COUNT(*) % 10 = 0;
+
+INSERT INTO shoe_promotions
+SELECT
+   email,
+   'bundle_offer' AS promotion_name
+FROM shoe_orders_enriched_customer_product
+WHERE brand IN ('Braun-Bruen', 'Will Inc')
+GROUP BY email
+HAVING COUNT(DISTINCT brand) = 2 AND COUNT(brand) > 10;
+```
+
+5. Verify the results.
+```sql
+SELECT *
+FROM shoe_promotions;
+```
+
+<div align="center">
+    <img src="images/flink-promotion-notifications.gif" width=75% height=75%>
+</div>
+
+***
+
+## <a name="step-14"></a>Connect Flink with Bedrock Model
 The next step is to create a integrated model from AWS Bedrock with Flink on Confluent Cloud.
 
-1. First, you will create the model connection using Confluent CLI. If you've never installed one, you could install it based on your OS  (https://docs.confluent.io/confluent-cli/current/install.html).
+1. First, you will create the model connection using Confluent CLI. If you've never installed one, you could install it based on your OS (https://docs.confluent.io/confluent-cli/current/install.html) and login to confluent.
+```bash
+confluent login
+```
 
 2. Make sure you prepare your AWS API Key and Secret to create connection to the Bedrock.
 
@@ -680,7 +890,12 @@ WITH (
     <img src="images/bedrock-3.png" width=100% height=100%>
 </div>
 
-4. Now let's invoke the model and get the results.
+4. For the table that we will invoke it supported under the stream/append mode.
+```sql
+ALTER TABLE shoe_loyalty_levels SET ('changelog.mode' = 'append');
+```
+
+5. Now let's invoke the model and get the results.
 
 ```sql
 SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('PromotionEngineSG', loyalty_level));
@@ -691,7 +906,31 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Prom
 
 ***
 
-## <a name="step-13"></a>Clean Up Resources
+## <a name="step-15"></a>Flink Monitoring
+1. Status of all the Flink Jobs is available under **Flink Statements** Tab.
+   
+<div align="center">
+    <img src="images/flink-statements-status.png" width=75% height=75%>
+</div>
+
+2. Compute pool utilization is available by clicking **Compute Pool tile**.
+
+<div align="center">
+    <img src="images/flink-compute-pool-tile.png" width=40% height=40%>
+</div>
+
+3. Utilization information.
+
+<div align="center">
+    <img src="images/flink-utilization-info.png" width=75% height=75%>
+</div>
+
+<br> 
+
+
+***
+
+## <a name="step-16"></a>Clean Up Resources
 
 Deleting the resources you created during this workshop will prevent you from incurring additional charges. 
 
@@ -701,28 +940,27 @@ Deleting the resources you created during this workshop will prevent you from in
     <img src="images/flink-delete-compute-pool.png" width=50% height=50%>
 </div>
 
-2. Delete the BigQuery sink connector by navigating to **Connectors** in the navigation panel, clicking your connector name, then clicking the trash can icon in the upper right and entering the connector name to confirm the deletion.
+2. Next, delete the Datagen Source connectors for **shoe_orders**, **shoe_products** and **shoe_customers**. Navigate to the **Connectors** tab and select each connector. In the settings tab, you will see a **trash** icon on the bottom of the page. Click the icon and enter the **Connector Name**.
 
 <div align="center">
-    <img src="images/delete-connector.png" width=60% height=60%>
+    <img src="images/delete-connector.png" width=75% height=75%>
 </div>
 
-3. Next, delete the Datagen Source connectors for **users** and **stocks**. 
-
-4. Delete the Cluster by going to the **Settings** tab and then selecting **Delete cluster**.
+3. Finally, under **Cluster Settings**, select the **Delete Cluster** button at the bottom. Enter the **Cluster Name** and select **Confirm**. 
 
 <div align="center">
-    <img src="images/delete-cluster.png" width=40% height=40%>
+    <img src="images/delete-cluster.png" width=50% height=50%>
 </div>
-
-5. Delete the Environment by expanding right hand menu and going to **Environments** tab and then clicking on **Delete** for the associated Environment you would like to delete
 
 *** 
 
-## <a name="step-14"></a>Confluent Resources and Further Testing
+## <a name="step-17"></a>Confluent Resources and Further Testing
 
 Here are some links to check out if you are interested in further testing:
 - [Confluent Cloud Documentation](https://docs.confluent.io/cloud/current/overview.html)
-- [Best Practices for Developing Apache Kafka Applications on Confluent Cloud](https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf)
+- [Apache Flink 101](https://developer.confluent.io/courses/apache-flink/intro/)
+- [Stream Processing with Confluent Cloud for Apache Flink](https://docs.confluent.io/cloud/current/flink/index.html)
+- [Flink SQL Reference](https://docs.confluent.io/cloud/current/flink/reference/overview.html)
+- [Flink SQL Functions](https://docs.confluent.io/cloud/current/flink/reference/functions/overview.html)
 
-
+***
