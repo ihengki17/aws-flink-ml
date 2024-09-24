@@ -489,7 +489,7 @@ CREATE TABLE shoe_customers_keyed (
   last_name STRING,
   email STRING,
   PRIMARY KEY (customer_id) NOT ENFORCED
-) DISTRIBUTED BY (customer_id) INTO 3 BUCKETS;
+) DISTRIBUTED BY (customer_id) INTO 1 BUCKETS;
 ```
 
 2. Compare the new table `shoe_customers_keyed` with `shoe_customers`.
@@ -539,22 +539,13 @@ WHERE id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
 
 7. Product Catalog Table also requires unique rows for each item.
 Create a new table in order to have the latest information of each product. 
-It is useful when you need to know the latest price of the product for analytic purposes or you need to populate latest product information while joining with other tables.
+It is useful when you need to know the latest price of the product for analytic purposes or you need to populate latest product information while joining with other tables. We will create new table using CTAS (Create Table As Select)
 ```sql
 CREATE TABLE shoe_products_keyed(
-  product_id STRING,
-  brand STRING,
-  `model` STRING,
-  sale_price INT,
-  rating DOUBLE,
   PRIMARY KEY (product_id) NOT ENFORCED
-) DISTRIBUTED BY (product_id) INTO 3 BUCKETS;
-```
-
-8. Create a new Flink job to copy product data from the original table to the new table. 
-```sql
-INSERT INTO shoe_products_keyed
-  SELECT id,
+) DISTRIBUTED BY (product_id) INTO 1 BUCKETS
+AS SELECT
+         id as product_id,
          brand,
          `name`,
          sale_price,
@@ -562,7 +553,7 @@ INSERT INTO shoe_products_keyed
     FROM shoe_products;
 ```
 
-9. Check if only a single record is returned for some product.
+8. CTAS will simplified from creating table and insert into become one sql syntax. Check if only a single record is returned for some product.
 ```sql
 SELECT * 
 FROM shoe_products_keyed  
@@ -664,33 +655,12 @@ WHERE shoe_customers_keyed.customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
 5. Enrich Order information with Customer and Product Table.
    Create a new table for enriched order information.
 ```sql
-CREATE TABLE shoe_orders_enriched_customer_product(
-  order_id INT,
-  first_name STRING,
-  last_name STRING,
-  email STRING,
-  brand STRING,
-  `model` STRING,
-  sale_price INT,
-  rating DOUBLE
-) DISTRIBUTED BY (order_id) INTO 3 BUCKETS
+CREATE TABLE shoe_orders_enriched_customer_product
+DISTRIBUTED BY (order_id) INTO 1 BUCKETS
 WITH (
     'changelog.mode' = 'retract'
-);
-```
-
-Insert joined data from 3 tables into the new table.
-```sql
-INSERT INTO shoe_orders_enriched_customer_product(
-  order_id,
-  first_name,
-  last_name,
-  email,
-  brand,
-  `model`,
-  sale_price,
-  rating)
-SELECT
+)
+AS SELECT
   so.order_id,
   sc.first_name,
   sc.last_name,
@@ -741,23 +711,12 @@ GROUP BY email;
 </div>
 
 
-2. Create a new table that will store the loyalty levels if the customers.
+2. Create a new table that will store the loyalty levels of customers.
 ```sql
 CREATE TABLE shoe_loyalty_levels(
-  email STRING,
-  total BIGINT,
-  loyalty_level STRING,
   PRIMARY KEY (email) NOT ENFORCED
-) DISTRIBUTED BY (email) INTO 3 BUCKETS ;
-```
-
-3. Insert the calculated loyal levels into the new table.
-```sql
-INSERT INTO shoe_loyalty_levels(
- email,
- total,
- loyalty_level)
-SELECT
+) DISTRIBUTED BY (email) INTO 1 BUCKETS
+AS SELECT
   email,
   SUM(sale_price) AS total,
   CASE
@@ -770,7 +729,7 @@ FROM shoe_orders_enriched_customer_product
 GROUP BY email;
 ```
 
-4. Verify the results.
+3. Verify the results.
 ```sql
 SELECT *
 FROM shoe_loyalty_levels;
@@ -814,7 +773,7 @@ CREATE TABLE shoe_promotions(
   email STRING,
   promotion_name STRING,
   PRIMARY KEY (email) NOT ENFORCED
-) DISTRIBUTED BY (email) INTO 3 BUCKETS;
+) DISTRIBUTED BY (email) INTO 1 BUCKETS;
 ```
 
 4. Insert all the promotional information to the shoe_promotions table.  
@@ -863,7 +822,7 @@ confluent login
 2. Make sure you prepare your AWS API Key and Secret to create connection to the Bedrock.
 
 ```bash
-confluent flink connection create my-connection-sg --cloud aws --region ap-southeast-2 --type bedrock --endpoint https://bedrock-runtime.us-west-2.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
+confluent flink connection create my-connection --cloud aws --region ap-southeast-2 --type bedrock --endpoint https://bedrock-runtime.us-west-2.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
 ```
 
 <div align="center">
@@ -876,14 +835,14 @@ confluent flink connection create my-connection-sg --cloud aws --region ap-south
 
 3. After creating connection, we need to create the model in Flink before we could invoke on our query.
 ```sql
-CREATE MODEL PromotionEngineSG
+CREATE MODEL NotificationEngine
 INPUT (loyal_level STRING)
 OUTPUT (promotion STRING)
 WITH (
   'task' = 'text_generation',
   'provider' = 'bedrock',
   'bedrock.PARAMS.max_tokens' = '20000',
-  'bedrock.connection' = 'my-connection-sg',
+  'bedrock.connection' = 'my-connection',
   'bedrock.system_prompt' = 'You are an expert in the shoes market. Your task is to create an email for notification to customer of their loyalty level. No preamble needed, only output the Subject and Email Body in different line. Mention Subject word and Email Body word at the beginning of each line. Subject and Email body must be separated by 2 line breaks consistently. Congratulate their status but also inform users about the next level: Climbing needs purchase greater than 7000 to reach Bronze, Bronze needs purchase greater than 70000 to reach Silver, Silver needs purchase greater than 700000 to reach Gold.'
 );
 ```
@@ -900,7 +859,7 @@ ALTER TABLE shoe_loyalty_levels SET ('changelog.mode' = 'append');
 5. Now let's invoke the model and get the results.
 
 ```sql
-SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('PromotionEngineSG', loyalty_level));
+SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('NotificationEngine', loyalty_level));
 ```
 <div align="center">
     <img src="images/bedrock-4.png" width=100% height=100%>
