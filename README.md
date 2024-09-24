@@ -553,7 +553,7 @@ AS SELECT
     FROM shoe_products;
 ```
 
-8. CTAS will simplified from creating table and insert into become one sql syntax. Check if only a single record is returned for some product.
+8. CTAS will simplified from creating table and insert into one sql syntax. Check if only a single record is returned for some product.
 ```sql
 SELECT * 
 FROM shoe_products_keyed  
