@@ -714,9 +714,18 @@ GROUP BY email;
 2. Create a new table that will store the loyalty levels of customers.
 ```sql
 CREATE TABLE shoe_loyalty_levels(
+  email STRING,
+  total BIGINT,
+  loyalty_level STRING,
   PRIMARY KEY (email) NOT ENFORCED
-) DISTRIBUTED BY (email) INTO 1 BUCKETS
-AS SELECT
+) DISTRIBUTED BY (email) INTO 1 BUCKETS ;
+```
+```sql
+INSERT INTO shoe_loyalty_levels(
+ email,
+ total,
+ loyalty_level)
+SELECT
   email,
   SUM(sale_price) AS total,
   CASE
