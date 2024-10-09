@@ -548,6 +548,9 @@ It is useful when you need to know the latest price of the product for analytic 
 CREATE TABLE shoe_products_keyed(
   PRIMARY KEY (product_id) NOT ENFORCED
 ) DISTRIBUTED BY (product_id) INTO 1 BUCKETS
+WITH (
+    'changelog.mode' = 'upsert'
+)
 AS SELECT
          id as product_id,
          brand,
@@ -670,7 +673,7 @@ AS SELECT
   sc.last_name,
   sc.email,
   sp.brand,
-  sp.`model`,
+  sp.`name`,
   sp.sale_price,
   sp.rating
 FROM 
