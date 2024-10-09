@@ -651,10 +651,6 @@ ON shoe_orders.customer_id = shoe_customers_keyed.customer_id
 WHERE shoe_customers_keyed.customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
 ```
 
-<div align="center">
-    <img src="images/flink-joins-latest-customer-info-order-time.png" width=75% height=75%>
-</div>
-
 > **Note:** There might be empty result set if keyed customers tables was created after the order records were ingested in the shoe_orders topic.
 
 > **Note:** For more details of temporal joins please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/queries/joins.html#temporal-joins)
@@ -835,18 +831,47 @@ The next step is to create a integrated model from AWS Bedrock with Flink on Con
 confluent login
 ```
 
+>After login use environment that you're using for Confluent Cloud Cluster and Flink
+```bash
+confluent environment list
+```
+```bash
+confluent environment use <environment id>
+```
+
 2. Make sure you prepare your AWS API Key and Secret to create connection to the Bedrock.
 
 ```bash
 confluent flink connection create my-connection --cloud aws --region ap-southeast-2 --type bedrock --endpoint https://bedrock-runtime.us-west-2.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
 ```
 
+> **Note:** If you doesn't have any user you could check the step below to create user with full access to Bedrock and creating API key and secret. You could skip this step if you already have user and api key with full access to bedrock.
+
+>Go to **AWS IAM>User** and create User
 <div align="center">
-    <img src="images/bedrock-1.png" width=100% height=100%>
+    <img src="images/bedrock0-1.png" width=100% height=100%>
+</div>
+
+>Create User with attach policies for Bedrock Full Access
+<div align="center">
+    <img src="images/bedrock0-2.png" width=100% height=100%>
+</div>
+
+<div align="center">
+    <img src="images/bedrock0-3.png" width=100% height=100%>
+</div>
+
+>Create API Key by search your user that has been created and click on the "Create Access Key"
+<div align="center">
+    <img src="images/bedrock0-4.png" width=100% height=100%>
 </div>
 
 <div align="center">
     <img src="images/bedrock-2.png" width=100% height=100%>
+</div>
+
+<div align="center">
+    <img src="images/bedrock-1.png" width=100% height=100%>
 </div>
 
 3. After creating connection, we need to create the model in Flink before we could invoke on our query.
