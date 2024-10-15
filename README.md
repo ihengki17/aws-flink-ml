@@ -87,25 +87,19 @@ An environment contains clusters and its deployed components such as Apache Flin
     <img src="images/stream-governance-1.png" width=50% height=50%>
 </div>
 
-3. Select **AWS Sydney Region** for Stream Governance Essentials, click **Continue**.
-
-<div align="center" padding=25px>
-    <img src="images/stream-governance-2.png" width=50% height=50%>
-</div>
-
-4. Now that you have an environment, click **Create Cluster**. 
+3. Now that you have an environment, click **Create Cluster**. 
 
 > **Note:** Confluent Cloud clusters are available in 3 types: Basic, Standard, and Dedicated. Basic is intended for development use cases so you will use that for the workshop. Basic clusters only support single zone availability. Standard and Dedicated clusters are intended for production use and support Multi-zone deployments. If you are interested in learning more about the different types of clusters and their associated features and limits, refer to this [documentation](https://docs.confluent.io/current/cloud/clusters/cluster-types.html).
 
-5. Chose the **Basic** cluster type. 
+4. Chose the **Basic** cluster type. 
 
 <div align="center" padding=25px>
     <img src="images/cluster-type.png" width=50% height=50%>
 </div>
 
-6. Click **Begin Configuration**. 
-7. Choose your preferred Cloud Provider (AWS, GCP, or Azure), region, and availability zone. 
-8. Specify a **Cluster Name**. For the purpose of this lab, any name will work here. 
+5. Click **Begin Configuration**. 
+6. Choose your preferred Cloud Provider (AWS, GCP, or Azure), region, and availability zone. 
+7. Specify a **Cluster Name**. For the purpose of this lab, any name will work here. 
 
 <div align="center" padding=25px>
     <img src="images/create-cluster.png" width=50% height=50%>
@@ -118,7 +112,7 @@ An environment contains clusters and its deployed components such as Apache Flin
 
 ## <a name="step-3"></a>Create a Flink Compute Pool
 
-1. On the navigation menu, select **Flink** and click **Create Compute Pool**.
+1. Go back to the environment tab, then on the navigation menu, select **Flink** and click **Create Compute Pool**.
 
 <div align="center" padding=25px>
     <img src="images/create-flink-pool-1.png" width=50% height=50%>
@@ -129,7 +123,7 @@ An environment contains clusters and its deployed components such as Apache Flin
     <img src="images/create-flink-pool-2.png" width=50% height=50%>
 </div>
 
-3. Name you Pool Name and set the capacity units (CFUs) to **5**. Click **Finish**.
+3. Name you Pool Name and set the capacity units (CFUs) to **5**. Click **Create**.
 
 <div align="center" padding=25px>
     <img src="images/create-flink-pool-3.png" width=50% height=50%>
@@ -175,7 +169,7 @@ An environment contains clusters and its deployed components such as Apache Flin
 
 2. Click on **Cluster Settings**. This is where you can find your *Cluster ID, Bootstrap Server, Cloud Details, Cluster Type,* and *Capacity Limits*.
 3. On the same navigation menu, select **Topics** and click **Create Topic**. 
-4. Enter **shoe_products** as the topic name, **3** as the number of partitions, and then click **Create with defaults**. 
+4. Enter **shoe_products** as the topic name, **3** as the number of partitions, and then click **Create with defaults**. You do not need to configure a data contract so can skip that. 
 
 <div align="center" padding=25px>
     <img src="images/create-topic.png" width=50% height=50%>
@@ -221,7 +215,7 @@ The next step is to produce sample data using the Datagen Source connector. You 
     <img src="images/connectors.png" width=75% height=75%>
 </div>
 
-2. Enter the following configuration details. The remaining fields can be left blank.
+2. Enter the following configuration details. The remaining fields can be left blank. As the UI walks you through the connector configuration, after you enter in the API key and secret, you can select the relevant "sample quickstart schema." For each quickstart please refer to the "setting" column below. For example, in this first connector we will select the quickstart schema as "Shoe customers." 
 
 <div align="center">
 
@@ -336,7 +330,8 @@ Following mappings exist:
 | Cluster        | Database  |
 | Topic + Schema | Table     |
 
-1. Familiarize with **Flink SQL** Basics.
+1. Familiarize with **Flink SQL** Basics. In order to open up new cells to input SQL within the SQL UI editor of Confluent Cloud, simply hover over the "+" sign to the left of each cell. Note you are limited to a total of 20 cells in the UI at one time. You can use cmd+return hotkey to run each cell, or the "run" button on the bottom right of each cell. 
+
 ```sql
 SHOW CATALOGS;
 ```
@@ -482,7 +477,7 @@ GROUP BY window_start, window_end;
 ***
 
 ## <a name="step-10"></a>Flink Tables - Primary Key
-A primary key constraint is a hint for Flink SQL to leverage for optimizations which specifies that a column or a set of columns in a table or a view are unique and they do not contain null. No columns in a primary key can be nullable. A primary key uniquely identifies a row in a table.
+A primary key constraint in Flink SQL provides a valuable optimization hint, indicating that a specific column or set of columns in a table or view is unique and cannot contain null values.
 For more details please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/statements/create-table.html#primary-key-constraint)
 
 1. Create a new table that will store unique customers only.
@@ -560,7 +555,7 @@ AS SELECT
     FROM shoe_products;
 ```
 
-8. CTAS will simplified from creating table and insert into one sql syntax. Check if only a single record is returned for some product.
+8. CTAS simply the process by combining table creation and data insertion into a single SQL statement. We can double check that only one record is returned for a particular product id via the select statement below:
 ```sql
 SELECT * 
 FROM shoe_products_keyed  
@@ -766,8 +761,7 @@ FROM shoe_orders_enriched_customer_product
 WHERE brand = 'Jones-Stokes'
 GROUP BY email;
 ```
-
-2. Find eligible customers who ordered **'Braun-Bruen'** and **'Will Inc'** in total more than **10**.
+2. Find eligible customers who ordered **'Braun-Bruen'** and **'Will Inc'** in total more than 10 times.
 ```sql
 SELECT
    email,
@@ -824,7 +818,7 @@ FROM shoe_promotions;
 ***
 
 ## <a name="step-14"></a>Connect Flink with Bedrock Model
-The next step is to create a integrated model from AWS Bedrock with Flink on Confluent Cloud.
+The next step is to create an AWS Bedrock text generation model via the Flink SQL editor on Confluent Cloud. The Confluent Flink pipeline will effectively perform a call out to Bedrock, and Bedrock will compose a email template for each customer, based on their loyalty level achieved with our store. 
 
 1. First, you will create the model connection using Confluent CLI. If you've never installed one, you could install it based on your OS (https://docs.confluent.io/confluent-cli/current/install.html) and login to confluent.
 ```bash
@@ -874,7 +868,7 @@ confluent flink connection create my-connection --cloud aws --region ap-southeas
     <img src="images/bedrock-1.png" width=100% height=100%>
 </div>
 
-3. After creating connection, we need to create the model in Flink before we could invoke on our query.
+3. After creating the connection, go back into the Confluent Cloud Flink SQL editor and run the below "CREATE MODEL" SQL statement which will leverage AWS bedrock. Guided by the system_prompt we provide to the text generation model below, each time new data arrives in the **loyalty_level** topic, the model will run. When we run "ML_PREDICT" in a later step to invoke the model, you will be able to see the results the model returns, effectively creating a realtime Gen AI pipeline.   
 ```sql
 CREATE MODEL NotificationEngine
 INPUT (loyal_level STRING)
@@ -911,21 +905,11 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Noti
 ## <a name="step-15"></a>Flink Monitoring
 1. Status of all the Flink Jobs is available under **Flink Statements** Tab.
    
-<div align="center">
-    <img src="images/flink-statements-status.png" width=75% height=75%>
-</div>
 
 2. Compute pool utilization is available by clicking **Compute Pool tile**.
 
-<div align="center">
-    <img src="images/flink-compute-pool-tile.png" width=40% height=40%>
-</div>
-
 3. Utilization information.
 
-<div align="center">
-    <img src="images/flink-utilization-info.png" width=75% height=75%>
-</div>
 
 <br> 
 
@@ -966,3 +950,33 @@ Here are some links to check out if you are interested in further testing:
 - [Flink SQL Functions](https://docs.confluent.io/cloud/current/flink/reference/functions/overview.html)
 
 ***
+
+## **Troubleshooting**
+
+1. If you encounter the below Confluent CLI error, please update to the most recent version of the Confluent Cloud CLI. 
+```
+Error: unknown flag: --cloud
+Usage:
+    confluent flink [command]
+
+Available Commands:
+    compute-pool      Manage Flink compute pools.
+    connectivity-type Manage Flink connectivity type.
+    region            List Flink regions.
+    shell             Start Flink interactive SQL client.
+    statement         Manage Flink SQL statements.
+
+Global Flags:
+    -h, --help            Show help for this command.
+            --unsafe-trace    Equivalent to -vvvv, but also log HTTP requests and responses which might contain plaintext secrets.
+    -v, --verbose count   Increase verbosity (-v for warn, -vv for info, -vvv for debug, -vvvv for trace).
+```
+
+2. If you get this error in creating the Bedrock model, please ensure you create it in the same region as your Confluent Cloud Flink cluster: 
+```
+Waiting for statement to be ready. Statement phase is PENDING.
+Error: can't fetch results. Statement phase is: FAILED
+Error details: Could not execute CreateModel in path `<environment>`.`<cluster>`.`NotificationEngine`
+
+Caused by: Connection 'my-connection' not found
+```
