@@ -506,7 +506,7 @@ SHOW CREATE TABLE shoe_customers_keyed;
 By creating a table with Primary Key option, you changed the changelog-mode to upsert which means that all rows with same primary key are related and must be partitioned together.
 For more details please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/statements/create-table.html#changelog-mode)
 
-3. Create a new Flink job to copy customer data from the original table to the new table.
+3. Create a new Flink job to copy customer data from the original table to the new table .
 ```sql
 INSERT INTO shoe_customers_keyed
   SELECT id,
@@ -516,7 +516,7 @@ INSERT INTO shoe_customers_keyed
     FROM shoe_customers;
 ```
 
-4. Show the number of customers in `shoe_customers_keyed`.
+4. Show the number of customers in `shoe_customers_keyed` as a new statement using **"+"** on the left side of SQL editor apart from the INSERT INTO statement.
 ```sql
 SELECT COUNT(*) as number_of_customers
 FROM shoe_customers_keyed;
@@ -555,7 +555,7 @@ AS SELECT
     FROM shoe_products;
 ```
 
-8. CTAS simply the process by combining table creation and data insertion into a single SQL statement. We can double check that only one record is returned for a particular product id via the select statement below:
+8. CTAS simply the process by combining table creation and data insertion into a single SQL statement. We can double check that only one record is returned for a particular product id via the select statement below as a new statement using **"+"** on the left side of SQL editor:
 ```sql
 SELECT * 
 FROM shoe_products_keyed  
@@ -675,7 +675,7 @@ FROM
     ON so.product_id = sp.product_id;
 ```
 
-Verify that the data was joined successfully.
+Verify that the data was joined successfully as a new statement using **"+"** on the left side of SQL editor apart from CTAS that has been running.
 ```sql
 SELECT * FROM shoe_orders_enriched_customer_product;
 ```
@@ -736,7 +736,7 @@ FROM shoe_orders_enriched_customer_product
 GROUP BY email;
 ```
 
-3. Verify the results.
+3. Verify the results as a new statement using **"+"** on the left side of SQL editor apart from query INSERT INTO that has been running.
 ```sql
 SELECT *
 FROM shoe_loyalty_levels;
@@ -782,7 +782,7 @@ CREATE TABLE shoe_promotions(
 ) DISTRIBUTED BY (email) INTO 1 BUCKETS;
 ```
 
-4. Insert all the promotional information to the shoe_promotions table.  
+4. Insert all the promotional information to the shoe_promotions table as a two differnt statement using **"+"** on the left side of SQL editor as two different running query.  
 ```sql
 INSERT INTO shoe_promotions
 SELECT
@@ -805,7 +805,7 @@ GROUP BY email
 HAVING COUNT(DISTINCT brand) = 2 AND COUNT(brand) > 10;
 ```
 
-5. Verify the results.
+5. Verify the results as a new statement using **"+"** on the left side of SQL editor.
 ```sql
 SELECT *
 FROM shoe_promotions;
