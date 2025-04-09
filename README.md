@@ -327,20 +327,20 @@ The next step is to produce sample data using the Datagen Source connector. You 
 > * If neither of these steps work, try creating another Datagen connector.
 
 
-11. You can view the sample data flowing into topics in real time. Navigate to  the **Topics** tab and then click on the **shoe_customers**. You can view the production and consumption throughput metrics here.
+11. You can view the sample data flowing into topics in real time. Navigate to  the **Topics** tab and then click on the **shoe_products**. You can view the production and consumption throughput metrics here.
 
 12. Click on **Messages**.
 
-* You should now be able to see the messages within the UI. You can view the specific messages by clicking the icon. 
+* You should now be able to see the messages within the UI. You can view the specific messages by clicking the message row. 
 
 <div align="center">
-    <img src="images/message-view-1.png">
+    <img src="images/message1.png">
 </div> 
 
 * The message details should look something like the following. 
 
 <div align="center">
-    <img src="images/message-view-2.png" width=75% height=75%>
+    <img src="images/message2.png" width=75% height=75%>
 </div>
 
 ***
