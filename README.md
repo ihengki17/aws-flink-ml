@@ -862,10 +862,10 @@ confluent login
 2. Make sure you prepare your AWS API Key and Secret to create connection to the Bedrock.
 
 ```bash
-confluent flink connection create my-connection --cloud aws --region ap-southeast-2 --type bedrock --endpoint https://bedrock-runtime.us-west-2.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
+confluent flink connection create my-connection-sg --cloud aws --region ap-southeast-2 --type bedrock --endpoint https://bedrock-runtime.us-west-2.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
 ```
 
-> **Note:** If you doesn't have any user you could check the step below to create user with full access to Bedrock and creating API key and secret. You could skip this step if you already have user and api key with full access to bedrock.
+> **Note:** region input need to be the same region for your Flink environment, only the endpoint for bedrock could cross-region.
 
 >Go to **AWS IAM>User** and create User
 <div align="center">
@@ -894,7 +894,7 @@ confluent flink connection create my-connection --cloud aws --region ap-southeas
     <img src="images/bedrock-2.png" width=100% height=100%>
 </div>
 
-3. After creating connection, we need to create the model in Flink before we could invoke on our query.
+3. After creating connection, go back to the Flink SQL Workspace to create the model in Flink before we could invoke on our query.
 ```sql
 CREATE MODEL NotificationEngine
 INPUT (loyal_level STRING)
@@ -912,10 +912,11 @@ WITH (
     <img src="images/bedrock-3.png" width=100% height=100%>
 </div>
 
-4. For the table that we will invoke it supported under the stream/append mode.
+4. Alter the Table as stream/append mode.
 ```sql
 ALTER TABLE shoe_loyalty_levels SET ('changelog.mode' = 'append');
 ```
+> **Note:** The model will only work with table that using the stream or append mode.
 
 5. Now let's invoke the model and get the results.
 
@@ -929,7 +930,7 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Noti
 ***
 
 ## <a name="step-15"></a>Flink Monitoring
-1. Status of all the Flink Jobs is available under **Flink Statements** Tab.
+1. Get the status of all the Flink Jobs is available through the Flink menu on the left pane from the Environment Overview under **Flink Statements** Tab.
    
 <div align="center">
     <img src="images/flink-statement.png" width=75% height=75%>
