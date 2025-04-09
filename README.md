@@ -932,19 +932,19 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Noti
 1. Status of all the Flink Jobs is available under **Flink Statements** Tab.
    
 <div align="center">
-    <img src="images/flink-statements-status.png" width=75% height=75%>
+    <img src="images/flink-statement.png" width=75% height=75%>
 </div>
 
 2. Compute pool utilization is available by clicking **Compute Pool tile**.
 
 <div align="center">
-    <img src="images/flink-compute-pool-tile.png" width=40% height=40%>
+    <img src="images/flink-compute-pool.png" width=40% height=40%>
 </div>
 
 3. Utilization information.
 
 <div align="center">
-    <img src="images/flink-utilization-info.png" width=75% height=75%>
+    <img src="images/flink-utilization.png" width=75% height=75%>
 </div>
 
 <br> 
