@@ -37,7 +37,15 @@
 > _**Note:** You will create resources during this workshop that will incur costs. When you sign up for a Confluent Cloud account, you will get free credits to use in Confluent Cloud. This will cover the cost of resources created during the workshop. More details on the specifics can be found [here](https://www.confluent.io/confluent-cloud/tryfree/)._
 
 <div align="center" padding=25px>
-    <img src="images/billing.png" width=75% height=75%>
+    <img src="images/survey1.png" width=75% height=75%>
+</div>
+
+<div align="center" padding=25px>
+    <img src="images/survey2.png" width=75% height=75%>
+</div>
+
+<div align="center" padding=25px>
+    <img src="images/survey3.png" width=75% height=75%>
 </div>
 
 ***
@@ -80,7 +88,11 @@ An environment contains clusters and its deployed components such as Apache Flin
 >_**Note:** There is a *default* environment ready in your account upon account creation. You can use this *default* environment for the purpose of this workshop if you do not wish to create an additional environment._
 
 <div align="center" padding=25px>
-    <img src="images/environment.png" width=50% height=50%>
+    <img src="images/environment1.png" width=50% height=50%>
+</div>
+
+<div align="center" padding=25px>
+    <img src="images/environment2.png" width=50% height=50%>
 </div>
 
 2. Now that you have an environment, click **Create Cluster**. 
@@ -111,18 +123,18 @@ An environment contains clusters and its deployed components such as Apache Flin
 1. On the navigation menu, select **Flink** and click **Create Compute Pool**.
 
 <div align="center" padding=25px>
-    <img src="images/create-flink-pool-1.png" width=50% height=50%>
+    <img src="images/flink1.png" width=50% height=50%>
 </div>
 
 2. Select **Region** and then **Continue**.
 <div align="center" padding=25px>
-    <img src="images/create-flink-pool-2.png" width=50% height=50%>
+    <img src="images/flink2.png" width=50% height=50%>
 </div>
 
 3. Name you Pool Name and set the capacity units (CFUs) to **5**. Click **Finish**.
 
 <div align="center" padding=25px>
-    <img src="images/create-flink-pool-3.png" width=50% height=50%>
+    <img src="images/flink3.png" width=50% height=50%>
 </div>
 
 > **Note:** The capacity of a compute pool is measured in CFUs. Compute pools expand and shrink automatically based on the resources required by the statements using them. A compute pool without any running statements scale down to zero. The maximum size of a compute pool is configured during creation.
@@ -130,13 +142,13 @@ An environment contains clusters and its deployed components such as Apache Flin
 4. Flink Compute pools will be ready shortly. You can click **Open SQL workspace** when the pool is ready to use.
 
 <div align="center" padding=25px>
-    <img src="images/create-flink-pool-4.png" width=50% height=50%>
+    <img src="images/flink4.png" width=50% height=50%>
 </div>
 
 5. Change your workspace name by clicking **settings button**. Click **Save changes** after you update the workspace name.
 
 <div align="center" padding=25px>
-    <img src="images/flink-workspace-1.png" width=50% height=50%>
+    <img src="images/flink5.png" width=50% height=50%>
 </div>
 
 6. Set the default Catalog as your environment name.
