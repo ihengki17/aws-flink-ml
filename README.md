@@ -83,7 +83,7 @@ An environment contains clusters and its deployed components such as Apache Flin
 
 1. Click **+ Add cloud environment**. Specify an **Environment Name** and choose the **Essential Package** for stream governance, then Click **Create**. 
 
->Stream Governance have two option Essential and Advanced, which give you more rich features over the governance such as Stream Lineage up to 7 days, Data Catalog, Business Metadata, and unlimited Schema to be registered on Confluent Cloud.
+>Stream Governance have two option **Essential** and **Advanced**, which in Advanced it will give you more rich features over the governance such as Stream Lineage up to 7 days, Data Catalog, Business Metadata, and unlimited Schema to be registered on Confluent Cloud.
 
 >_**Note:** There is a *default* environment ready in your account upon account creation. You can use this *default* environment for the purpose of this workshop if you do not wish to create an additional environment._
 
@@ -151,16 +151,10 @@ An environment contains clusters and its deployed components such as Apache Flin
     <img src="images/flink5.png" width=50% height=50%>
 </div>
 
-6. Set the default Catalog as your environment name.
+6. Set the default **Catalog** as your environment name and **Database** as your cluster name.
 
 <div align="center" padding=25px>
-    <img src="images/flink-workspace-2.png" width=50% height=50%>
-</div>
-
-7. Set the default Database as your cluster name.
-
-<div align="center" padding=25px>
-    <img src="images/flink-workspace-3.png" width=50% height=50%>
+    <img src="images/flink6.png" width=50% height=50%>
 </div>
 
 ***
