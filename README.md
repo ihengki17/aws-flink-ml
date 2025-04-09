@@ -960,19 +960,19 @@ Deleting the resources you created during this workshop will prevent you from in
 1. The first item to delete is the Apache Flink Compute Pool. Select the **Delete** button under **Actions** and enter the **Application Name** to confirm the deletion. 
 
 <div align="center">
-    <img src="images/flink-delete-compute-pool.png" width=50% height=50%>
+    <img src="images/delete1.png" width=50% height=50%>
 </div>
 
 2. Next, delete the Datagen Source connectors for **shoe_orders**, **shoe_products** and **shoe_customers**. Navigate to the **Connectors** tab and select each connector. In the settings tab, you will see a **trash** icon on the bottom of the page. Click the icon and enter the **Connector Name**.
 
 <div align="center">
-    <img src="images/delete-connector.png" width=75% height=75%>
+    <img src="images/delete2.png" width=75% height=75%>
 </div>
 
 3. Finally, under **Cluster Settings**, select the **Delete Cluster** button at the bottom. Enter the **Cluster Name** and select **Confirm**. 
 
 <div align="center">
-    <img src="images/delete-cluster.png" width=50% height=50%>
+    <img src="images/delete3.png" width=50% height=50%>
 </div>
 
 *** 
