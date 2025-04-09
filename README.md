@@ -166,15 +166,27 @@ An environment contains clusters and its deployed components such as Apache Flin
 > **Note:** This section shows Cluster Metrics, such as Throughput and Storage. This page also shows the number of Topics, Partitions, Connectors, and ksqlDB Applications.  Below is an example of the metrics dashboard once you have data flowing through Confluent Cloud.
 
 <div align="center" padding=25px>
+    <img src="images/environment-overview.png" width=75% height=75%>
+</div>
+
+<div align="center" padding=25px>
     <img src="images/cluster-metrics.png" width=75% height=75%>
 </div>
 
 2. Click on **Cluster Settings**. This is where you can find your *Cluster ID, Bootstrap Server, Cloud Details, Cluster Type,* and *Capacity Limits*.
 3. On the same navigation menu, select **Topics** and click **Create Topic**. 
-4. Enter **shoe_products** as the topic name, **3** as the number of partitions, and then click **Create with defaults**. 
+4. Enter **shoe_products** as the topic name, **3** as the number of partitions, and then click **Create with defaults**. Skip the data contracts as it will be created on the other step. 
 
 <div align="center" padding=25px>
-    <img src="images/create-topic.png" width=50% height=50%>
+    <img src="images/create-topic1.png" width=50% height=50%>
+</div>
+
+<div align="center" padding=25px>
+    <img src="images/create-topic2.png" width=50% height=50%>
+</div>
+
+<div align="center" padding=25px>
+    <img src="images/create-topic3.png" width=50% height=50%>
 </div>
 
 5. Repeat the previous step and create a second topic name **shoe_customers** and **3** as the number of partitions.
@@ -216,58 +228,69 @@ The next step is to produce sample data using the Datagen Source connector. You 
 <div align="center" padding=25px>
     <img src="images/connectors.png" width=75% height=75%>
 </div>
+<div align="center" padding=25px>
+    <img src="images/datagen1.png" width=75% height=75%>
+</div>
 
 2. Enter the following configuration details. The remaining fields can be left blank.
 
 <div align="center">
 
-| setting                            | value                        |
-|------------------------------------|------------------------------|
-| name                               | DatagenSourceConnector_shoe_customers |
-| api key                            | [*from step 5* ](#step-5)    |
-| api secret                         | [*from step 5* ](#step-5)    |
-| topic                              | shoe_customers               |
-| output message format              | AVRO                         |
-| quickstart                         | Shoe customers               |
-| max interval between messages (ms) | 1000                         |
-| tasks                              | 1                            |
+| section                            |setting                             | value                        |
+|------------------------------------|------------------------------------|------------------------------|
+| (1) Topic selection                | topic                              | shoe_customers               |
+| (2) Kafka credentials              | api key                            | [*from step 5* ](#step-5)    |
+| (2) Kafka credentials              | api secret                         | [*from step 5* ](#step-5)    |
+| (3) Configuration                  | output message format              | AVRO                         |
+| (3) Configuration                  | quickstart                         | Shoe customers               |
+| (3) Configuration                  | max interval between messages (ms) | 1000                         |
+| (4) Sizing                         | tasks                              | 1                            |
+| (5) Review and Launch              | connector name                     | DatagenSourceConnector_shoe_customers |
 </div>
 
 <br>
 
 <div align="center" padding=25px>
-    <img src="images/datagen-1.png" width=75% height=75%>
-    <img src="images/datagen-2.png" width=75% height=75%>
+    <img src="images/datagen2.png" width=75% height=75%>
 </div>
 
 3. Click on **Show advanced configurations** and complete the necessary fields and click **Continue**.
 
 <div align="center" padding=25px>
-    <img src="images/datagen-3.png" width=75% height=75%>
+    <img src="images/datagen3.png" width=75% height=75%>
+</div>
+
+<div align="center" padding=25px>
+    <img src="images/datagen32.png" width=75% height=75%>
 </div>
    
 4. Before launching the connector, you should see something similar to the following. If everything looks similar, select **Launch**. 
 
 <div align="center" padding=25px>
-    <img src="images/datagen-4.png" width=50% height=50%>
+    <img src="images/datagen4.png" width=50% height=50%>
 </div>
+
+<div align="center" padding=25px>
+    <img src="images/datagen5.png" width=50% height=50%>
+</div>
+
 
 5. Next, create the second connector that will send data to **shoe_products**. Click on **+ Add Connector** and then the **datagen Source** icon again. 
 
 6. Enter the following configuration details. The remaining fields can be left blank. 
 
 <div align="center">
-
-| setting                            | value                        |
-|------------------------------------|------------------------------|
-| name                               | DatagenSourceConnector_shoe_products |
-| api key                            | [*from step 5* ](#step-5)    |
-| api secret                         | [*from step 5* ](#step-5)    |
-| topic                              | shoe_products                |
-| output message format              | AVRO                         |
-| quickstart                         | Shoes                        |
-| max interval between messages (ms) | 1000                         |
-| tasks                              | 1                            |
+    
+| section                            |setting                             | value                        |
+|------------------------------------|------------------------------------|------------------------------|
+| (1) Topic selection                | topic                              | shoe_products                |
+| (2) Kafka credentials              | api key                            | [*from step 5* ](#step-5)    |
+| (2) Kafka credentials              | api secret                         | [*from step 5* ](#step-5)    |
+| (3) Configuration                  | output message format              | AVRO                         |
+| (3) Configuration                  | quickstart                         | Shoes                        |
+| (3) Configuration                  | max interval between messages (ms) | 1000                         |
+| (4) Sizing                         | tasks                              | 1                            |
+| (5) Review and Launch              | connector name                     | DatagenSourceConnector_shoe_products |
 </div>
 
 <br> 
@@ -280,16 +303,16 @@ The next step is to produce sample data using the Datagen Source connector. You 
 
 <div align="center">
 
-| setting                            | value                        |
-|------------------------------------|------------------------------|
-| name                               | DatagenSourceConnector_shoe_orders |
-| api key                            | [*from step 5* ](#step-5)    |
-| api secret                         | [*from step 5* ](#step-5)    |
-| topic                              | shoe_orders                  |
-| output message format              | AVRO                         |
-| quickstart                         | Shoe orders                  |
-| max interval between messages (ms) | 1000                         |
-| tasks                              | 1                            |
+| section                            |setting                             | value                        |
+|------------------------------------|------------------------------------|------------------------------|
+| (1) Topic selection                | topic                              | shoe_orders                  |
+| (2) Kafka credentials              | api key                            | [*from step 5* ](#step-5)    |
+| (2) Kafka credentials              | api secret                         | [*from step 5* ](#step-5)    |
+| (3) Configuration                  | output message format              | AVRO                         |
+| (3) Configuration                  | quickstart                         | Shoe orders                  |
+| (3) Configuration                  | max interval between messages (ms) | 1000                         |
+| (4) Sizing                         | tasks                              | 1                            |
+| (5) Review and Launch              | connector name                     | DatagenSourceConnector_shoe_orders |
 </div>
 
 <br> 
