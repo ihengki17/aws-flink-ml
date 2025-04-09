@@ -547,7 +547,7 @@ INSERT INTO shoe_customers_keyed
          email
     FROM shoe_customers;
 ```
-> **Note:** Query that using insert into will keep running as persistent query.
+> **Note:** Query that using insert into will keep running as persistent query even the workspace is closed.
 
 4. Create another cell to show the number of customers in `shoe_customers_keyed`.
 ```sql
@@ -839,7 +839,7 @@ GROUP BY email
 HAVING COUNT(DISTINCT brand) = 2 AND COUNT(brand) > 10;
 ```
 
-5. Verify the results on another new cell.
+5. Verify the results on another new cell. This could takes some times since we do aggregation with rules, which if you do means you are really fast :)
 ```sql
 SELECT *
 FROM shoe_promotions;
