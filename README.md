@@ -34,7 +34,7 @@
     - Sign up for a Confluent Cloud account [here](https://www.confluent.io/confluent-cloud/tryfree/).
     - Once you have signed up and logged in, click on the menu icon at the upper right hand corner, click on “Billing & payment”, then enter payment details under “Payment details & contacts”. A screenshot of the billing UI is included below.
 
-> **Note:** You will create resources during this workshop that will incur costs. When you sign up for a Confluent Cloud account, you will get free credits to use in Confluent Cloud. This will cover the cost of resources created during the workshop. More details on the specifics can be found [here](https://www.confluent.io/confluent-cloud/tryfree/).
+> _**Note:** You will create resources during this workshop that will incur costs. When you sign up for a Confluent Cloud account, you will get free credits to use in Confluent Cloud. This will cover the cost of resources created during the workshop. More details on the specifics can be found [here](https://www.confluent.io/confluent-cloud/tryfree/)._
 
 <div align="center" padding=25px>
     <img src="images/billing.png" width=75% height=75%>
@@ -75,7 +75,7 @@ An environment contains clusters and its deployed components such as Apache Flin
 
 1. Click **+ Add Environment**. Specify an **Environment Name** and Click **Create**. 
 
->**Note:** There is a *default* environment ready in your account upon account creation. You can use this *default* environment for the purpose of this workshop if you do not wish to create an additional environment.
+>_**Note:** There is a *default* environment ready in your account upon account creation. You can use this *default* environment for the purpose of this workshop if you do not wish to create an additional environment._
 
 <div align="center" padding=25px>
     <img src="images/environment.png" width=50% height=50%>
@@ -123,7 +123,7 @@ An environment contains clusters and its deployed components such as Apache Flin
     <img src="images/create-flink-pool-3.png" width=50% height=50%>
 </div>
 
-> **Note:** The capacity of a compute pool is measured in CFUs. Compute pools expand and shrink automatically based on the resources required by the statements using them. A compute pool without any running statements scale down to zero. The maximum size of a compute pool is configured during creation. 
+> **Note:** The capacity of a compute pool is measured in CFUs. Compute pools expand and shrink automatically based on the resources required by the statements using them. A compute pool without any running statements scale down to zero. The maximum size of a compute pool is configured during creation.
 
 4. Flink Compute pools will be ready shortly. You can click **Open SQL workspace** when the pool is ready to use.
 
@@ -155,7 +155,7 @@ An environment contains clusters and its deployed components such as Apache Flin
 
 1. On the navigation menu, you will see **Cluster Overview**. 
 
-> **Note:** This section shows Cluster Metrics, such as Throughput and Storage. This page also shows the number of Topics, Partitions, Connectors, and ksqlDB Applications.  Below is an example of the metrics dashboard once you have data flowing through Confluent Cloud. 
+> **Note:** This section shows Cluster Metrics, such as Throughput and Storage. This page also shows the number of Topics, Partitions, Connectors, and ksqlDB Applications.  Below is an example of the metrics dashboard once you have data flowing through Confluent Cloud.
 
 <div align="center" padding=25px>
     <img src="images/cluster-metrics.png" width=75% height=75%>
@@ -173,7 +173,7 @@ An environment contains clusters and its deployed components such as Apache Flin
    
 6. Repeat the previous step and create a second topic name **shoe_orders** and **3** as the number of partitions.
 
-> **Note:** Topics have many configurable parameters. A complete list of those configurations for Confluent Cloud can be found [here](https://docs.confluent.io/cloud/current/using/broker-config.html). If you are interested in viewing the default configurations, you can view them in the Topic Summary on the right side. 
+> _**Note:** Topics have many configurable parameters. A complete list of those configurations for Confluent Cloud can be found [here](https://docs.confluent.io/cloud/current/using/broker-config.html). If you are interested in viewing the default configurations, you can view them in the Topic Summary on the right side._ 
 
 7. After topic creation, the **Topics UI** allows you to monitor production and consumption throughput metrics and the configuration parameters for your topics. When you begin sending messages to Confluent Cloud, you will be able to view those messages and message schemas.
 8. Below is a look at the topic, **shoe_orders**, but you need to send data to this topic before you see any metrics.
