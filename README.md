@@ -355,12 +355,20 @@ Following mappings exist:
 | Cluster        | Database  |
 | Topic + Schema | Table     |
 
-1. Familiarize with **Flink SQL** Basics.
+1. Go to your SQL Workspace by click the your Environment and go to Flink workspace Familiarize with **Flink SQL** Basics.
+<div align="center">
+    <img src="images/environment-flink.png" width=75% height=75%>
+</div>
+
+<div align="center">
+    <img src="images/environment-flink2.png" width=75% height=75%>
+</div>
+
 ```sql
 SHOW CATALOGS;
 ```
 
-```
+```sql
 SHOW DATABASES;
 ```
 
@@ -368,7 +376,7 @@ SHOW DATABASES;
 SHOW TABLES;
 ```
 <div align="center">
-    <img src="images/show-tables.png" width=75% height=75%>
+    <img src="images/show-tables1.png" width=75% height=75%>
 </div>
 
 Understand how the table `shoe_products` was created:
@@ -404,7 +412,7 @@ SELECT * FROM shoe_customers
   WHERE `state` = 'Texas' AND `last_name` LIKE 'B%';
 ```
 
-5. Check the first ten orders for one customer.
+5. Stop the previous query and Check the first ten orders for one customer.
 ```sql
 SELECT order_id,
        product_id,
@@ -415,7 +423,7 @@ SELECT order_id,
   LIMIT 10;
 ```
 
-6. Find the message timestamps for all orders of one customer.
+6. Stop the query and execute to Find the message timestamps for all orders of one customer.
 ```sql
 SELECT order_id,
        customer_id,
@@ -431,19 +439,19 @@ WHERE customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
 ***
 
 ## <a name="step-8"></a>Flink Aggregations
-1. Find the number of customers records.
+1. Create another cell by click **+** on the left of your query cell and Find the number of customers records.
 ```sql
 SELECT COUNT(id) AS num_records
 FROM shoe_customers;
 ```
 
-2. Find the number of unique customers records.
+2. Stop the query and Find the number of unique customers records.
 ```sql
 SELECT COUNT(DISTINCT id) AS num_customers
 FROM shoe_customers;
 ```
 
-3. For each shoe brand, find the number of shoe models, average rating and maximum model price. 
+3. Stop the query and search For each shoe brand, find the number of shoe models, average rating and maximum model price. 
 ```sql
 SELECT brand as brand_name, 
        COUNT(DISTINCT name) as models_by_brand,
@@ -473,7 +481,7 @@ b. [Hop Windows](https://docs.confluent.io/cloud/current/flink/reference/queries
 c. [Cumulate Windows](https://docs.confluent.io/cloud/current/flink/reference/queries/window-tvf.html#flink-sql-window-tvfs-cumulate)
 <br> 
 
-1. Find the amount of orders for one minute intervals (tumbling window aggregation).
+1. Create another cell by click **+** on the left of your query cell and Find the amount of orders for one minute intervals (tumbling window aggregation).
 ```sql
 SELECT window_end,
        COUNT(DISTINCT order_id) AS num_orders
@@ -486,7 +494,7 @@ GROUP BY window_end;
     <img src="images/flink-window-function.gif" width=75% height=75%>
 </div>
 
-2. Find the amount of orders for ten minute intervals advanced by five minutes (hopping window aggregation).
+2. Stop the query and Find the amount of orders for ten minute intervals advanced by five minutes (hopping window aggregation).
 ```sql
 SELECT window_start,
        window_end,
@@ -504,7 +512,7 @@ GROUP BY window_start, window_end;
 A primary key constraint is a hint for Flink SQL to leverage for optimizations which specifies that a column or a set of columns in a table or a view are unique and they do not contain null. No columns in a primary key can be nullable. A primary key uniquely identifies a row in a table.
 For more details please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/statements/create-table.html#primary-key-constraint)
 
-1. Create a new table that will store unique customers only.
+1. Create another cell by click **+** on the left of your query cell and Create a new table that will store unique customers only.
 ```sql
 CREATE TABLE shoe_customers_keyed (
   customer_id STRING,
@@ -515,7 +523,7 @@ CREATE TABLE shoe_customers_keyed (
 ) DISTRIBUTED BY (customer_id) INTO 1 BUCKETS;
 ```
 
-2. Compare the new table `shoe_customers_keyed` with `shoe_customers`.
+2. Create another cell to compare the new table `shoe_customers_keyed` with `shoe_customers`.
 ```sql
 SHOW CREATE TABLE shoe_customers;
 ```
@@ -539,21 +547,22 @@ INSERT INTO shoe_customers_keyed
          email
     FROM shoe_customers;
 ```
+> **Note:** Query that using insert into will keep running as persistent query.
 
-4. Show the number of customers in `shoe_customers_keyed`.
+4. Create another cell to show the number of customers in `shoe_customers_keyed`.
 ```sql
 SELECT COUNT(*) as number_of_customers
 FROM shoe_customers_keyed;
 ```
 
-5. Look up one specific customer in the keyed Table (shoe_customers_keyed).
+5. Stop the query and look up one specific customer in the keyed Table (shoe_customers_keyed).
 ```sql
 SELECT * 
 FROM shoe_customers_keyed  
 WHERE customer_id = 'b523f7f3-0338-4f1f-a951-a387beeb8b6a';
 ```
 
-6. Look up the specific customer change history in non-keyed Table (shoe_customers).
+6. Stop the query and look up the specific customer change history in non-keyed Table (shoe_customers).
 ```sql
 SELECT *
 FROM shoe_customers
@@ -596,7 +605,7 @@ By default, the order of joins is not optimized. Tables are joined in the order 
 You can tweak the performance of your join queries, by listing the tables with the lowest update frequency first and the tables with the highest update frequency last. Make sure to specify tables in an order that doesn’t yield a cross join (Cartesian product), which aren’t supported and would cause a query to fail.
 For more details please check this [link.](https://docs.confluent.io/cloud/current/flink/reference/queries/joins.html)
 
-1. Join orders with non-keyed customer records (Regular Join).
+1. Create new cell to join orders with non-keyed customer records (Regular Join).
 ```sql
 SELECT order_id,
        shoe_orders.`$rowtime` as ingestion_time,
@@ -764,7 +773,7 @@ FROM shoe_orders_enriched_customer_product
 GROUP BY email;
 ```
 
-3. Verify the results.
+3. Create new cell and verify the results.
 ```sql
 SELECT *
 FROM shoe_loyalty_levels;
@@ -811,7 +820,7 @@ CREATE TABLE shoe_promotions(
 ) DISTRIBUTED BY (email) INTO 1 BUCKETS;
 ```
 
-4. Insert all the promotional information to the shoe_promotions table.  
+4. Create into two cell to insert all the promotional information to the shoe_promotions table.  
 ```sql
 INSERT INTO shoe_promotions
 SELECT
@@ -834,7 +843,7 @@ GROUP BY email
 HAVING COUNT(DISTINCT brand) = 2 AND COUNT(brand) > 10;
 ```
 
-5. Verify the results.
+5. Verify the results on another new cell.
 ```sql
 SELECT *
 FROM shoe_promotions;
