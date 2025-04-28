@@ -21,9 +21,10 @@
 12. [Customer Loyalty Level Calculation](#step-12)
 13. [Create Promotional Campaigns](#step-13)
 14. [Connect Flink with Bedrock Model](#step-14)
-15. [Flink Monitoring](#step-15)
-16. [Clean Up Resources](#step-16)
-17. [Confluent Resources and Further Testing](#step-17)
+15. [Query data on AWS Athena using Tableflow](#step-15)
+16. [Flink Monitoring](#step-16)
+17. [Clean Up Resources](#step-17)
+18. [Confluent Resources and Further Testing](#step-18)
 
 ***
 
@@ -929,7 +930,60 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Noti
 
 ***
 
-## <a name="step-15"></a>Flink Monitoring
+## <a name="step-15"></a>Query data on AWS Athena using Tableflow
+1. Go back to the topics page and click the **shoe_loyalty_levels** to enable the Tableflow
+2. Click the **Enable Tableflow** and click **Use Confluent Storage**
+<div align="center">
+    <img src="images/tableflow-1.png" width=75% height=75%>
+</div>
+<div align="center">
+    <img src="images/tableflow-2.png" width=75% height=75%>
+</div>
+
+3. On the Cluster Page, click **Tableflow** tab to get the rest endpoint of the Tableflow (copy and save the endpoint).
+4. Create the API Key access for tableflow
+<div align="center">
+    <img src="images/tableflow-3.png" width=75% height=75%>
+</div>
+<div align="center">
+    <img src="images/tableflow-4.png" width=75% height=75%>
+</div>
+
+5. Now go to AWS Athena to create workgroup using PySpark to query the Tableflow.
+<div align="center">
+    <img src="images/tableflow-5.png" width=75% height=75%>
+</div>
+
+6. Under the workgroup you created in previous step, create a new notebook. Name your workbook, and in the **Apache Spark properties** section, select **Custom** to provide Spark properties in JSON format.
+<div align="center">
+    <img src="images/tableflow-6.png" width=75% height=75%>
+</div>
+
+```bash
+{
+  "spark.sql.catalog.tableflow-cluster": "org.apache.iceberg.spark.SparkCatalog",
+  "spark.sql.catalog.tableflow-cluster.catalog-impl": "org.apache.iceberg.rest.RESTCatalog",
+  "spark.sql.catalog.tableflow-cluster.uri": "<Tableflow-REST-Catalog-URI>",
+  "spark.sql.catalog.tableflow-cluster.credential": "<cloud-api-key>:<secret>",
+  "spark.sql.catalog.tableflowdemo.s3.remote-signing-enabled": "true",
+  "spark.sql.defaultCatalog": "tableflow-cluster",
+  "spark.sql.extensions": "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions"
+}
+```
+7. Run the following query in Athena PySpark to see the Iceberg tables and results in the Tableflow Catalog.
+```sql
+%%sql
+SHOW TABLES in `<your-kafka-cluster-id>`
+
+%%sql
+SELECT * FROM `<your-kafka-cluster-id>`.<table-name>;
+```
+
+
+***
+
+
+## <a name="step-16"></a>Flink Monitoring
 1. Get the status of all the Flink Jobs is available through the Flink menu on the left pane from the Environment Overview under **Flink Statements** Tab.
    
 <div align="center">
@@ -953,7 +1007,7 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Noti
 
 ***
 
-## <a name="step-16"></a>Clean Up Resources
+## <a name="step-17"></a>Clean Up Resources
 
 Deleting the resources you created during this workshop will prevent you from incurring additional charges. 
 
@@ -977,7 +1031,7 @@ Deleting the resources you created during this workshop will prevent you from in
 
 *** 
 
-## <a name="step-17"></a>Confluent Resources and Further Testing
+## <a name="step-18"></a>Confluent Resources and Further Testing
 
 Here are some links to check out if you are interested in further testing:
 - [Confluent Cloud Documentation](https://docs.confluent.io/cloud/current/overview.html)
