@@ -941,7 +941,7 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Noti
 </div>
 
 3. On the Cluster Page, click **Tableflow** tab to get the rest endpoint of the Tableflow (copy and save the endpoint).
-4. Create the API Key access for tableflow
+4. Create the **API Key** access for tableflow
 <div align="center">
     <img src="images/tableflow-3.png" width=75% height=75%>
 </div>
@@ -949,7 +949,7 @@ SELECT email, promotion FROM shoe_loyalty_levels, LATERAL TABLE(ML_PREDICT('Noti
     <img src="images/tableflow-4.png" width=75% height=75%>
 </div>
 
-5. Now go to AWS Athena to create workgroup using PySpark to query the Tableflow.
+5. Now go to **AWS Athena** to create workgroup using PySpark to query the Tableflow.
 <div align="center">
     <img src="images/tableflow-5.png" width=75% height=75%>
 </div>
